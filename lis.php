@@ -46,6 +46,14 @@ class Env {
 		$this->outer = $outer;
 	}
 	
+	public function __toString() {
+		$result = array();
+		foreach($this->values as $key => $val) {
+			$result[] = array($key, to_string($val) . "\n");
+		}
+		return to_string($result);
+	}
+	
 	public function update($values) {
 		$this->values = $this->values + $values;
 		return $this;
@@ -88,7 +96,7 @@ function add_globals($env) {
 		'len' => function($x) { return count($x); }, 
 		'cons' => function($x, $y) { return array_merge(array($x), $y); },
 		'car' => function($x) { return $x[0]; },
-		'cdr' => function($x) { return $x[1]; },
+		'cdr' => function($x) { return array_slice($x, 1); },
 		'append' => function($x,$y) { return array_merge($x, $y); },
 		'list' => function() { return func_get_args(); },
 		'list?' => function($x) { return is_array($x); },
@@ -185,7 +193,7 @@ function atom($token) {
 
 function to_string($exp) {
 	//Convert a PHP object back into a Lisp-readable string.
-	return isa($exp, 'list') ? ('(' . join(' ', array_map('Scphpeme\to_string', $exp)) . ')') : (string)$exp;
+	return isa($exp, 'list') ? ('(' . join(' ', array_map('Scphpeme\to_string', $exp)) . ')') : ($exp instanceof \Closure ? '<primitive func>' : (string)$exp);
 }
 
 function raw_input($prompt = '>') {

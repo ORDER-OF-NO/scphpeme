@@ -44,6 +44,7 @@ $lis_tests = array(
 );
 
 function test($tests, $name=''){
+	global $global_env;
     //For each (exp, expected) test case, see if eval(parse(exp)) == expected.
     $fails = 0;
     foreach($tests as $test) { 
