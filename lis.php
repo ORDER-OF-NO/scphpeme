@@ -128,7 +128,9 @@ function _eval($x, $env = false) {
 		$env->setAt($var, _eval($exp, $env));
 	} elseif($x[0] == 'lambda') {        # (lambda (var*) exp)
 		list($_, $vars, $exp) = $x;
-		return Lambda::create($x, function() use($vars, $exp, &$env){ return _eval($exp, new Env(array_combine($vars, func_get_args()), $env)); }); 
+		return Lambda::create($x, function() use($vars, $exp, &$env){ 
+			return _eval($exp, new Env(array_combine($vars, func_get_args()), $env));
+		});
 	} elseif($x[0] == 'begin') {         # (begin exp*)
 		foreach(array_slice($x, 1) as $exp) $val = _eval($exp, $env);
 		return $val;
@@ -160,17 +162,17 @@ function tokenize($s) {
 
 function read_from(&$tokens) {
 	//Read an expression from a sequence of tokens
-    count($tokens) || syntaxError('unexpected EOF while reading');
-    $token = array_shift($tokens);
-    if('(' == $token) {
-        $L = array();
-        while($tokens[0] != ')') $L[] = read_from($tokens);
-        array_shift($tokens); # pop off ')'
-        return $L;
-    } elseif(')' == $token) {
-       syntaxError('unexpected )');
-    } else {
-        return atom($token);
+	count($tokens) || syntaxError('unexpected EOF while reading');
+	$token = array_shift($tokens);
+	if('(' == $token) {
+		$L = array();
+		while($tokens[0] != ')') $L[] = read_from($tokens);
+		array_shift($tokens); # pop off ')'
+		return $L;
+	} elseif(')' == $token) {
+		syntaxError('unexpected )');
+	} else {
+		return atom($token);
 	}
 }
 
