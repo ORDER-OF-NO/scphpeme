@@ -2,6 +2,8 @@
 
 namespace Scphpeme;
 
+const None = false;
+
 class Symbol {
 	private $val;
 	public function __construct($val) {
@@ -197,5 +199,3 @@ function repl($prompt = 'lis.php> ') {
 	//A prompt-read-eval-print loop.
 	while(true) if($val = _eval(parse(raw_input($prompt)))) print to_string($val) . "\n";
 }
-
-repl();
