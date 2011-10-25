@@ -122,7 +122,7 @@ function _eval($x, $env = false) {
 	
 	if(isa($x, 'Scphpeme\Symbol')) {     # variable reference
 		return $env->find($x)->at($x);
-	} elseif(!isa($x, 'list')) {         # constant literal
+	} elseif(!isa($x, 'LIST')) {         # constant literal
 		return $x;
 	} elseif($x[0] == 'QUOTE') {         # (quote exp)
 		list($_, $exp) = $x;
