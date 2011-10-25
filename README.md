@@ -11,6 +11,10 @@ It would be nice to add readline support for the repl.
 
 allow multi-line support for repl so you can enter longer expressions.
 
-I just heard the news that john mccarthy passed away last night. 1927 - 2011. 
+I just heard the news that john mccarthy passed away early this morning. 1927 - 2011. 
+It is literally impossible for me to put into words the impact his contribution to science
+has made on my life. Lisp has expanded my mind, my horizons and brought me deeper undestanding
+of language, philosophy, and art. 
+
 # (cons (quote R) (list (quote I) (quote P)))
 
