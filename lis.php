@@ -85,23 +85,23 @@ function add_globals($env) {
 		'-' => function($x, $y) { return $x - $y; },
 		'*' => function($x, $y) { return $x * $y; }, 
 		'/' => function($x, $y) {	return $x / $y; },
-		'not' => function($x) { return !(bool)$x; },
+		'NOT' => function($x) { return !(bool)$x; },
 		'>' => function($x, $y) { return $x > $y; },
 		'<' => function($x, $y) { return $x < $y; },
 		'>=' => function($x, $y) { return $x >= $y; },
 		'<=' => function($x, $y) { return $x <= $y; },
 		'=' => function($x, $y) { return $x == $y; },
-		'equal?' => function($x, $y) { return $x == $y; },
-		'eq?' => function($x, $y) {	return $x === $y; },
-		'len' => function($x) { return count($x); }, 
-		'cons' => function($x, $y) { return array_merge(array($x), $y); },
-		'car' => function($x) { return $x[0]; },
-		'cdr' => function($x) { return array_slice($x, 1); },
-		'append' => function($x,$y) { return array_merge($x, $y); },
-		'list' => function() { return func_get_args(); },
-		'list?' => function($x) { return is_array($x); },
-		'null?' => function($x) { return $x == array(); },
-		'symbol?' => function($x) { return isa($x, 'Scphpeme\Symbol'); } 
+		'EQUAL?' => function($x, $y) { return $x == $y; },
+		'EQ?' => function($x, $y) {	return $x === $y; },
+		'LEN' => function($x) { return count($x); }, 
+		'CONS' => function($x, $y) { return array_merge(array($x), $y); },
+		'CAR' => function($x) { return $x[0]; },
+		'CDR' => function($x) { return array_slice($x, 1); },
+		'APPEND' => function($x,$y) { return array_merge($x, $y); },
+		'LIST' => function() { return func_get_args(); },
+		'LIST?' => function($x) { return is_array($x); },
+		'NULL?' => function($x) { return $x == array(); },
+		'SYMBOL?' => function($x) { return isa($x, 'Scphpeme\Symbol'); } 
 	));
 }
 
@@ -124,24 +124,24 @@ function _eval($x, $env = false) {
 		return $env->find($x)->at($x);
 	} elseif(!isa($x, 'list')) {         # constant literal
 		return $x;
-	} elseif($x[0] == 'quote') {         # (quote exp)
+	} elseif($x[0] == 'QUOTE') {         # (quote exp)
 		list($_, $exp) = $x;
 		return $exp;
-	} elseif($x[0] == 'if') {            # (if test conseq alt)
+	} elseif($x[0] == 'IF') {            # (if test conseq alt)
 		list($_, $test, $conseq, $alt) = $x;
 		return _eval((_eval($test, $env) ? $conseq : $alt), $env);
-	} elseif($x[0] == 'set!') {          # (set! var exp)
+	} elseif($x[0] == 'SET!') {          # (set! var exp)
 		list($_, $var, $exp) = $x;
 		$env->find($var)->setAt($var, _eval($exp, $env));
-	} elseif($x[0] == 'define') {        # (define var exp)
+	} elseif($x[0] == 'DEFINE') {        # (define var exp)
 		list($_, $var, $exp) = $x;
 		$env->setAt($var, _eval($exp, $env));
-	} elseif($x[0] == 'lambda') {        # (lambda (var*) exp)
+	} elseif($x[0] == 'LAMBDA') {        # (lambda (var*) exp)
 		list($_, $vars, $exp) = $x;
 		return Lambda::create($x, function() use($vars, $exp, &$env){ 
 			return _eval($exp, new Env(array_combine($vars, func_get_args()), $env));
 		});
-	} elseif($x[0] == 'begin') {         # (begin exp*)
+	} elseif($x[0] == 'BEGIN') {         # (begin exp*)
 		foreach(array_slice($x, 1) as $exp) $val = _eval($exp, $env);
 		return $val;
 	} else {                             # (proc exp*)
@@ -188,7 +188,7 @@ function read_from(&$tokens) {
 
 function atom($token) {
 	//Numbers become numbers; every other token is a symbol.
-	return is_numeric($token) ? (float)$token : new Symbol($token);
+	return is_numeric($token) ? (float)$token : new Symbol(strtoupper($token));
 }
 
 function to_string($exp) {
