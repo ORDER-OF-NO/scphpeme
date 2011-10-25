@@ -10,4 +10,7 @@ make all tests pass (including TCO)
 It would be nice to add readline support for the repl.
 
 allow multi-line support for repl so you can enter longer expressions.
- 
+
+I just heard the news that john mccarthy passed away last night. 1927 - 2011. 
+# (cons (quote R) (list (quote I) (quote P)))
+
