@@ -564,6 +564,10 @@ function demand($x, $predicate, $msg='wrong length') {
 	}
 }
 
+function atIndex($arr, $index) {
+	return $arr[$index];
+}
+
 function expand_quasiquote($x) {
 	#Expand `x => 'x; `,x => x; `(,@x y) => (append x y).
 	if(!is_pair($x)) {
@@ -577,7 +581,9 @@ function expand_quasiquote($x) {
 		demand($x[0], count($x[0]) == 2);
 		return array(S::append(), $x[0][1], expand_quasiquote(array_slice($x, 1)));
 	} else {
-		return array(S::cons(), expand_quasiquote($x[0]), expand_quasiquote(array_slice($x, 1)));
+		return S::quasiquote($x[0]) ? expand_quasiquote(atIndex(expand_quasiquote(array_slice($x, 1)), 1)) 
+			   : 
+			   array(S::cons(), expand_quasiquote($x[0]), expand_quasiquote(array_slice($x, 1)));
 	}
 }
 
